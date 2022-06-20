@@ -1,8 +1,8 @@
-import NavbarLayout from '../layouts/NavbarLayout';
+import MainLayout from '../layouts/MainLayout';
 
 const Index = () => {
   return (
-    <NavbarLayout pageTitle="Главная">
+    <MainLayout pageTitle="Главная">
       <div className="center">
         <h1>Добро пожаловать</h1>
         <h3>Здесь собраны мои любимые треки!</h3>
@@ -17,7 +17,7 @@ const Index = () => {
           justify-content: center;
         }
       `}</style>
-    </NavbarLayout>
+    </MainLayout>
   );
 };
 
