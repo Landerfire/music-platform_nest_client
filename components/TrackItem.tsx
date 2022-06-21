@@ -17,18 +17,22 @@ interface TrackItemProps {
 const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
 
-  const { playTrack, pauseTrack, setActive } = useActions();
+  const { playTrack, pauseTrack, setActive, setActiveTrackId } = useActions();
   const { pause, active, currentTime, duration, activeTrackId } = useTypedSelector((state) => state.player);
 
   const play = (event: React.MouseEvent) => {
     event.stopPropagation();
     setActive(track);
+    setActiveTrackId(Number(track.id));
     pauseTrack();
   };
 
   return (
     <Card className={styles.track} onClick={() => router.push('/tracks/' + track.id)}>
-      <IconButton onClick={play}>{active ? <Pause /> : <PlayArrow />}</IconButton>
+      {/* <IconButton onClick={play}>{active ? <Pause /> : <PlayArrow />}</IconButton> */}
+      <IconButton onClick={play}>
+        <PlayArrow />
+      </IconButton>
       <Image
         // style={{ width: 70, height: 70 }}
         width={70}

@@ -1,9 +1,9 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
-import Image from 'next/image';
+import { Box, Button, Grid } from '@mui/material';
 import { useState } from 'react';
 import AddTrackForm from '../../components/AddTrackForm';
 import FileUpload from '../../components/FileUpload';
 import StepWrapper from '../../components/StepWrapper';
+import { useInput } from '../../hooks/useInput';
 import MainLayout from '../../layouts/MainLayout';
 
 const Create = () => {

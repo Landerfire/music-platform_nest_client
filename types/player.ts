@@ -13,6 +13,7 @@ export enum PlayerActionTypes {
   PLAY = 'PLAYER/PLAY',
   PAUSE = 'PLAYER/PAUSE',
   SET_ACTIVE = 'PLAYER/SET_ACTIVE',
+  SET_ACTIVE_TRACK_ID = 'PLAYER/SET_ACTIVE_TRACK_ID',
   SET_DURATION = 'PLAYER/SET_DURATION',
   SET_CURRENT_TIME = 'PLAYER/SET_CURRENT_TIME',
   SET_VOLUME = 'PLAYER/SET_VOLUME',
@@ -29,6 +30,11 @@ interface PauseAction {
 interface SetActiveAction {
   type: PlayerActionTypes.SET_ACTIVE;
   payload: ITrack;
+}
+
+interface SetActiveTrackId {
+  type: PlayerActionTypes.SET_ACTIVE_TRACK_ID;
+  payload: number;
 }
 
 interface SetDurationAction {
@@ -50,6 +56,7 @@ export type PlayerAction =
   | PlayAction
   | PauseAction
   | SetActiveAction
+  | SetActiveTrackId
   | SetDurationAction
   | SetCurrentTimeAction
   | SetVolumeAction;

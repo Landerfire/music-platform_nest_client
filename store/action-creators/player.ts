@@ -19,3 +19,6 @@ export const setCurrentTime = (payload: number): PlayerAction => {
 export const setActive = (payload: ITrack): PlayerAction => {
   return { type: PlayerActionTypes.SET_ACTIVE, payload };
 };
+export const setActiveTrackId = (payload: number): PlayerAction => {
+  return { type: PlayerActionTypes.SET_ACTIVE_TRACK_ID, payload };
+};
