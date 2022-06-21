@@ -6,7 +6,7 @@ import { ITrack } from '../../types/track';
 
 const TrackPage = () => {
   const track: ITrack = {
-    _id: '1',
+    id: '1',
     name: 'Трек 1',
     artist: 'Исполнитель 1',
     text: 'Какой-то текст',
@@ -19,33 +19,35 @@ const TrackPage = () => {
 
   return (
     <MainLayout>
-      <Button onClick={() => router.push('/tracks')} variant={'outlined'} sx={{ fontSize: 32 }}>
-        К списку
-      </Button>
-      <Grid container my={'20px'}>
-        <Image src={track.picture} width={200} height={200} alt="Изображение обложки трека" />
-        <Box sx={{ marginLeft: '30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-          <h2>{track.name}</h2>
-          <h3>{track.artist}</h3>
-          <h4>Прослушано: {track.listens}</h4>
-        </Box>
-      </Grid>
-      <h2>Текст песни</h2>
-      <p>{track.text}</p>
-      <h1>Комментарии</h1>
-      <Grid container>
-        <TextField label={'Ваше имя'} fullWidth />
-        <TextField label={'Комментарий'} fullWidth multiline rows={4} />
-        <Button>Отправить</Button>
-      </Grid>
-      <div>
-        {track.comments.map((comment) => (
-          <div key={comment._id}>
-            <div>{comment.username}</div>
-            <div>{comment.text}</div>
-          </div>
-        ))}
-      </div>
+      <Box sx={{ px: '20px' }}>
+        <Button onClick={() => router.push('/tracks')} variant={'outlined'} sx={{ fontSize: 32 }}>
+          К списку
+        </Button>
+        <Grid container my={'20px'}>
+          <Image src={track.picture} width={200} height={200} alt="Изображение обложки трека" />
+          <Box sx={{ marginLeft: '30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
+            <h2>{track.name}</h2>
+            <h3>{track.artist}</h3>
+            <h4>Прослушано: {track.listens}</h4>
+          </Box>
+        </Grid>
+        <h2>Текст песни</h2>
+        <p>{track.text}</p>
+        <h1>Комментарии</h1>
+        <Grid container>
+          <TextField label={'Ваше имя'} fullWidth />
+          <TextField label={'Комментарий'} fullWidth multiline rows={4} />
+          <Button>Отправить</Button>
+        </Grid>
+        <div>
+          {track.comments.map((comment) => (
+            <div key={comment.id}>
+              <div>{comment.username}</div>
+              <div>{comment.text}</div>
+            </div>
+          ))}
+        </div>
+      </Box>
     </MainLayout>
   );
 };

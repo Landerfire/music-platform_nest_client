@@ -3,8 +3,9 @@ import { Slider, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import React from 'react';
+import { formatDurationTime } from '../helpers/formatDurationTime';
 
-interface TrackProgressProps {
+interface TrackProgressProps extends React.InputHTMLAttributes<HTMLInputElement> {
   left: number;
   right: number;
   onChange: (e) => void;
@@ -13,18 +14,12 @@ interface TrackProgressProps {
 
 const TinyText = styled(Typography)({
   fontSize: '0.75rem',
-  opacity: 0.4,
+  opacity: 0.7,
   fontWeight: 500,
   letterSpacing: 0.2,
 });
 
 const TrackProgressBar: React.FC<TrackProgressProps> = ({ left, right, onChange, type = 'progress' }) => {
-  function formatDuration(value: number) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = value - minute * 60;
-    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
-  }
-
   return (
     <>
       <Box
@@ -36,14 +31,37 @@ const TrackProgressBar: React.FC<TrackProgressProps> = ({ left, right, onChange,
         }}
       >
         {type === 'volume' && <VolumeUp sx={{ mr: 2 }} />}
-        <Slider aria-label={type} value={left} min={left} max={right} step={1} onChange={onChange} />
+        <Slider
+          aria-label={type}
+          value={left}
+          min={0}
+          max={right}
+          step={1}
+          onChange={onChange}
+          valueLabelDisplay={type === 'volume' ? 'auto' : 'off'}
+        />
       </Box>
       {type !== 'volume' && (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: -1 }}>
-          <TinyText>{formatDuration(left)}</TinyText>
-          <TinyText>{formatDuration(right)}</TinyText>
+          <TinyText>{formatDurationTime(left)}</TinyText>
+          <TinyText>{formatDurationTime(right)}</TinyText>
         </Box>
       )}
+
+      {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: -1 }}>
+        {type === 'progress' && (
+          <>
+            <TinyText>{formatDuration(left)}</TinyText>
+            <TinyText>{formatDuration(right)}</TinyText>
+          </>
+        )}
+        {type === 'volume' && (
+          <>
+            <TinyText>{left}</TinyText>
+            <TinyText>{right}</TinyText>
+          </>
+        )}
+      </Box> */}
     </>
   );
 };

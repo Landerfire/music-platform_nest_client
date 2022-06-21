@@ -1,42 +1,86 @@
 import { Pause, PlayArrow, VolumeUp } from '@mui/icons-material';
 import { Box, Grid, IconButton } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useActions } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import styles from '../styles/Player.module.scss';
 import { ITrack } from '../types/track';
 import TrackProgressBar from './TrackProgressBar';
 
+let audio: HTMLAudioElement;
+
 const Player: React.FC = () => {
-  const track: ITrack = {
-    _id: '1',
-    name: 'Трек 1',
-    artist: 'Исполнитель 1',
-    text: 'Какой-то текст',
-    listens: 0,
-    audio: 'http://localhost:5000/audio/3245b18e-1262-47eb-940d-596b55017651.mp3',
-    picture: 'http://localhost:5000/image/88ab34c1-6475-4712-8d2d-f02d8259632a.jpg',
-    comments: [],
-  };
   const { active, pause, volume, duration, currentTime } = useTypedSelector((state) => state.player);
-  const { pauseTrack, playTrack } = useActions();
+  const { pauseTrack, playTrack, setVolume, setDuration, setCurrentTime, setActive } = useActions();
+
+  // Инициализация аудио-трека при загрузке страницы
+  useEffect(() => {
+    if (!audio) {
+      audio = new Audio();
+    } else {
+      setAudio();
+      play();
+    }
+  }, [active]);
+
+  const setAudio = () => {
+    if (active) {
+      audio.src = 'http://localhost:5000/' + active.audio;
+      audio.volume = volume / 100;
+      audio.onloadedmetadata = () => {
+        setDuration(Math.floor(audio.duration));
+      };
+      audio.ontimeupdate = () => {
+        setCurrentTime(Math.floor(audio.currentTime));
+      };
+    }
+  };
+  // Конец инициализации аудио-трека при загрузке страницы
 
   const play = () => {
-    pause ? playTrack() : pauseTrack();
+    if (pause) {
+      playTrack();
+      audio.play();
+    } else {
+      pauseTrack();
+      audio.pause();
+    }
   };
+
+  const changeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(event.target.value));
+    audio.volume = Number(event.target.value) / 100;
+  };
+  const changeCurrentTime = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const dragCurrentTime = () => {
+      audio.pause();
+      setTimeout(() => audio.play(), 380);
+    };
+
+    dragCurrentTime();
+
+    setCurrentTime(Number(event.target.value));
+    audio.currentTime = Number(event.target.value);
+  };
+
+  if (!active) {
+    return null;
+  }
 
   return (
     <div className={styles.player}>
-      <IconButton onClick={play}>{!pause ? <Pause /> : <PlayArrow />}</IconButton>
+      <IconButton disabled={!active ? true : false} onClick={play}>
+        {pause ? <PlayArrow /> : <Pause />}
+      </IconButton>
       <Grid container direction={'column'} sx={{ width: 180, margin: '0 20px' }}>
-        <div>{track.name}</div>
-        <div className={styles.trackArtist}>{track.artist}</div>
+        <div>{active?.name}</div>
+        <div className={styles.trackArtist}>{active?.artist}</div>
       </Grid>
       <Box sx={{ width: '32vw', mx: 'auto' }}>
-        <TrackProgressBar left={0} right={100} onChange={() => ({})} />
+        <TrackProgressBar left={currentTime} right={duration} onChange={changeCurrentTime} />
       </Box>
       <Box sx={{ width: '10vw', ml: 'auto' }}>
-        <TrackProgressBar type="volume" left={0} right={100} onChange={() => ({})} />
+        <TrackProgressBar type="volume" left={volume} right={100} onChange={changeVolume} />
       </Box>
     </div>
   );

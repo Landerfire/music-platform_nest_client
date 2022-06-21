@@ -2,6 +2,7 @@ import { ITrack } from './track';
 
 export interface PlayerState {
   active: null | ITrack;
+  activeTrackId: null | number;
   volume: number;
   duration: number;
   currentTime: number;
