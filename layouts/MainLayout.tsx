@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import Player from '../components/Player';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 export const drawerWidth = 240;
 
@@ -36,6 +37,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, navbarTitle = 'Music 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const { active, activeTrackId } = useTypedSelector((state) => state.player);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -63,7 +66,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, navbarTitle = 'Music 
         <Main open={open} style={{ marginTop: '80px' }}>
           {children}
         </Main>
-        <Player />
+        {React.useMemo(() => (
+            <Player />
+          ), []
+        )}
       </Box>
     </>
   );

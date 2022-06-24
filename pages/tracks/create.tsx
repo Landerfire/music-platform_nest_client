@@ -1,4 +1,6 @@
 import { Box, Button, Grid } from '@mui/material';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import AddTrackForm from '../../components/AddTrackForm';
 import FileUpload from '../../components/FileUpload';
@@ -7,13 +9,31 @@ import { useInput } from '../../hooks/useInput';
 import MainLayout from '../../layouts/MainLayout';
 
 const Create = () => {
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const [picture, setPicture] = useState(null);
   const [audio, setAudio] = useState(null);
+  const name = useInput('');
+  const artist = useInput('');
+  const text = useInput('');
 
   const next = () => {
-    activeStep < 2 && setActiveStep((prev) => prev + 1);
+    if (activeStep < 2) {
+      setActiveStep((prev) => prev + 1);
+    } else {
+      const formData = new FormData();
+      formData.append('name', name.value);
+      formData.append('artist', artist.value);
+      formData.append('picture', picture);
+      formData.append('audio', audio);
+      
+      axios
+        .post('http://localhost:5000/tracks', formData)
+        .then((response) => router.push('/tracks'))
+        .catch((error) => console.log(error));
+    }
   };
+
   const back = () => {
     activeStep > 0 && setActiveStep((prev) => prev - 1);
   };
@@ -21,7 +41,7 @@ const Create = () => {
   return (
     <MainLayout pageTitle="">
       <StepWrapper activeStep={activeStep}>
-        {activeStep === 0 && <AddTrackForm />}
+        {activeStep === 0 && <AddTrackForm name={name} artist={artist} text={text} />}
         {activeStep === 1 && (
           <>
             <FileUpload setFile={setPicture} accept="image/*">

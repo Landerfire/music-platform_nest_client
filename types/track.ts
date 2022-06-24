@@ -8,7 +8,7 @@ export interface ITrack {
   id: string;
   name: string;
   artist: string;
-  text: string;
+  text: string | null;
   listens: number;
   picture: string;
   audio: string;

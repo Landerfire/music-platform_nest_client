@@ -18,13 +18,16 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
 
   const { playTrack, pauseTrack, setActive, setActiveTrackId } = useActions();
-  const { pause, active, currentTime, duration, activeTrackId } = useTypedSelector((state) => state.player);
+  const { pause, active, currentTime, duration, activeTrackId, volume } = useTypedSelector((state) => state.player);
 
   const play = (event: React.MouseEvent) => {
+    if (!pause) {
+      pauseTrack();
+    }
     event.stopPropagation();
     setActive(track);
     setActiveTrackId(Number(track.id));
-    pauseTrack();
+    playTrack();    
   };
 
   return (

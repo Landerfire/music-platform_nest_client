@@ -1,17 +1,16 @@
-import { Pause, PlayArrow, VolumeUp } from '@mui/icons-material';
+import { Pause, PlayArrow } from '@mui/icons-material';
 import { Box, Grid, IconButton } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useActions } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import styles from '../styles/Player.module.scss';
-import { ITrack } from '../types/track';
 import TrackProgressBar from './TrackProgressBar';
 
 let audio: HTMLAudioElement;
 
 const Player: React.FC = () => {
-  const { active, pause, volume, duration, currentTime } = useTypedSelector((state) => state.player);
-  const { pauseTrack, playTrack, setVolume, setDuration, setCurrentTime, setActive } = useActions();
+  const { active, pause, volume, duration, currentTime, activeTrackId } = useTypedSelector((state) => state.player);
+  const { pauseTrack, playTrack, setVolume, setDuration, setCurrentTime, setActive, setActiveTrackId } = useActions();
 
   // Инициализация аудио-трека при загрузке страницы
   useEffect(() => {
@@ -19,13 +18,15 @@ const Player: React.FC = () => {
       audio = new Audio();
     } else {
       setAudio();
-      play();
+      audio.play();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   const setAudio = () => {
     if (active) {
       audio.src = 'http://localhost:5000/' + active.audio;
+      console.log('pisya');
       audio.volume = volume / 100;
       audio.onloadedmetadata = () => {
         setDuration(Math.floor(audio.duration));
@@ -40,7 +41,8 @@ const Player: React.FC = () => {
   const play = () => {
     if (pause) {
       playTrack();
-      audio.play();
+      setTimeout(() => audio.play(), 150);
+      // audio.play();
     } else {
       pauseTrack();
       audio.pause();
